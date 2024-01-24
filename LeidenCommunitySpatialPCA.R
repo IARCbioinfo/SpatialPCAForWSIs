@@ -1,3 +1,16 @@
+###################################################################################################################################
+# Authors: Emilie Mathian 
+# This script searches for the Leiden community among the low-dimensional projections (20 dimensions) created by spatial PCA. 
+# The number of clusters can be modulated by varying the `KNN` parameter, i.e. the number of nodes linked together as a function of their distance, when creating the graph; 
+# and `Resolustion` when detecting the Leiden community. A smaller value for `Resolution` will tend to increase the number of communities and vice versa. 
+# Time and memory costs increase with the number of points (vectors) considered to create the graph, see the ntiles parameter. 
+# The centroids of the communities are saved in a csv file, so that the communities can then be assigned to other representations.
+# based on the minimum distance of these vectors from the community centroids.
+
+# Contacts: mathiane@iarc.who.int
+#          Rare cancer genomics teams, International Agency of Research on Cancer - WHO 
+####################################################################################################
+
 print("#-------------------------------------- Install package ------------------------------------------------------------------------")
 print(.libPaths())
 .libPaths("/home/mathiane/R/x86_64-pc-linux-gnu-library/4.0")
