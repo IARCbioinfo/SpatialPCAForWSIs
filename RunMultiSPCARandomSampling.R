@@ -74,7 +74,7 @@ correct_tiles_id <- function(df_enc_vector_c){
 
 print("# --------------------------------- Read scales encoded vectors ------------------------------------------------------------------------")
 df_enc_vector <- read.csv(path2projectors)
-#colnames(df_enc_vector)[colnames(df_enc_vector) == "tne_id_c"] ="sample_id"
+colnames(df_enc_vector)[colnames(df_enc_vector) == "tne_id_c"] ="sample_id"
 df_enc_vector <- df_enc_vector[!duplicated(df_enc_vector$img_id),]
 df_enc_vector <- df_enc_vector[,2:ncol(df_enc_vector)]
 
@@ -136,7 +136,7 @@ LIBD_multi = SpatialPCA_Multiple_Sample(encoded_vectors_df_list_for_pca, coords_
                                         numCores_spark=5, gene.number=d_enc_vectors, customGenelist=NULL, min.loctions = 20, min.features=20, bandwidth_common=0.1)
 
 # Save spatial PCA in a R obj
-save(LIBD_multi, file =  paste(output_folder, "SpatialPCAObject_50k_V4.RData", sep='/'))
+save(LIBD_multi, file =  paste(output_folder, "SpatialPCA_forWSI_Object.RData", sep='/'))
 
 multi_spatial_pcs <- LIBD_multi$MultipleSample_SpatialPCA_object@SpatialPCs
 multi_spatial_pcs <- t(multi_spatial_pcs)
@@ -151,7 +151,7 @@ multi_spatial_pcs$sample_id <- samples_id
 
 multi_spatial_pcs <- merge(multi_spatial_pcs, df_enc_vectors_to_pca[,129:ncol(df_enc_vectors_to_pca)], by.x="row.names", by.y="img_id_c")
 
-write.csv(multi_spatial_pcs, paste(output_folder, "spatial_pca_coords_50k_V4.csv", sep='/'))  
+write.csv(multi_spatial_pcs, paste(output_folder, "spatial_pca_coords.csv", sep='/'))  
 
 rm(multi_spatial_pcs)
 rm(df_enc_vectors_to_pca)
