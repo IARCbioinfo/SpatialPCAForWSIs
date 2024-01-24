@@ -66,17 +66,37 @@ sbatch Sbacth_ProjectionByPatient.sh
 - The algorithm is implemented in `LeidenCommunitySpatialPCA.R`, the configuration used in our ESMO open paper are described in `RunLeidenCommunity.sh`.
 
 ### Description of the process 
-1. Load all spatial PCA projections concatenated in a single csv file with the following architecture:
+1. Load all spatial PCA projections concatenated in a single csv file (see argline `proj_tab_SPCA`) with the following architecture:
 
-|   | img_id_c             | axis_1          | axis_2          | axis_3          | axis_4          | ... | axis_19         | axis_20         | tne_id_c               | x          | y          |
+|   | img_id_c             | axis_1          | axis_2          | axis_3          | axis_4          | ... | axis_19         | axis_20         | sample_id               | x          | y          |
 | - | -------------------- | --------------- | --------------- | --------------- | --------------- | --- | --------------- | --------------- | ---------------------- | ---------- | ---------- |
-| 1 | TNE0001_8065_37633   | -0.2425984449   | -1.5822019878   | 0.2216062175    | -0.7004538129   | ... | 0.0645403598   | 0.1015841795   | TNE0001_8065_37633     | 8065       | 37633      |
-| 2 | TNE0001_22657_31489  | -0.8694107393   | -0.3258183767   | -0.3124274849   | -0.1520251365   | ... | 0.08048248997  | -0.03595781844 | TNE0001_22657_31489    | 22657      | 31489      |
+| 1 | TNE0001_8065_37633   | -0.2425984449   | -1.5822019878   | 0.2216062175    | -0.7004538129   | ... | 0.0645403598   | 0.1015841795   | TNE0001 | 8065       | 37633      |
+| 2 | TNE0001_22657_31489  | -0.8694107393   | -0.3258183767   | -0.3124274849   | -0.1520251365   | ... | 0.08048248997  | -0.03595781844 | TNE0001 | 22657      | 31489      |
 
 2. Samples randomly n rows (see argline `ntiles`)
 3. Create a graph based on the K-nearest neighbors of each projection (see argline `KNN`)
 4. Seach community of nodes according to the Leiden method (see argline `Resolution`)
 5. Save cluster centroids in a file name `{outputdir}/SPCA_centroids_leiden_ntiles_{ntiles}_KNN_{KNN}_Res_{Resolution}_ncluster_{n_clusters_leiden}.csv`
+
+## Step 4: Assign a community to each spatial PCA projections
+- The script `ClosestCentroids.R` enables to assign a community to each spatial PCA projections according to the minimal distance between a projection and Leiden communities centroids. An example of slurm request is given in `RunClosestCentroids.sh`
+ ### Description of the process 
+ 1. Load the all spatial PCA projections concatenated in a single csv (see argline `proj_tab_SPCA`). **It must be the same file as the step 3.1**
+ 2. Extract the projection of the patient of interest (see argline `sample_id`)
+ 3. Load the coordinates of the Leiden communities centroids (see argline `centroids_tab`), this table must have the following format:
+ 
+ |   | cluster | axis_1          | axis_2          | axis_3          | axis_4          | ... | axis_19         | axis_20         |
+| - | ------- | --------------- | --------------- | --------------- | --------------- | --- | --------------- | --------------- |
+| 1 | 1       | 1.0776234132    | 0.3351948348    | -0.561474021    | -1.1364130733   | ... | -0.2101122186  | -0.1931117565  |
+| 2 | 2       | -1.4632848979   | 0.8883086482    | -0.3643381155   | -0.8784518651   | ... | -0.0111574198  | 0.03596174487  |
+
+4. Each projection is assigned to a community according to the minimal distance to one of the Leiden communities centroid.
+5. For the patient of interest the spatial PCA projection vector and its associated cluster is saved in a filename with the following pattern `{outdir}/SPCA_centroids_leiden_ntiles100000_KNN_6000_Res_01_{sample_id}.csv`. This table will have the following format:
+
+|   | img_id_c              | axis_1          | axis_2          | axis_3          | axis_4          | ... | axis_19         | axis_20         | sample_id    | x      | y      | cluster |
+| - | --------------------- | --------------- | --------------- | --------------- | --------------- | --- | --------------- | --------------- | ----------- | ------ | ------ | ------- |
+| 1 | TNE0001_8065_37633    | -0.2574942826   | -1.6276659801  | 0.1956646737    | -0.7829603307   | ... | 0.0844771901    | 0.1201035516    | TNE0001     | 8065   | 37633  | 5       |
+| 2 | TNE0001_22657_31489   | -0.8777365627   | -0.3758480951  | -0.299188705   | -0.2703297597   | ... | 0.04097749198   | -0.09903248588  | TNE0001     | 22657  | 31489  | 8       |
+
 ## TO DO LIST
-- :construction: Leiden community proj
 - :construction: Random forest
