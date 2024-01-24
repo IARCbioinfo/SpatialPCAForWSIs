@@ -37,15 +37,15 @@ library(parallel)
 print("# --------------------------------- Command line arguments ------------------------------------------")
 
 option_list = list(
-  make_option(c("-n", "--ntiles"), type="integer", default = 100000,
+  make_option(c("--ntiles"), type="integer", default = 100000,
               help="Number of tiles"),
-  make_option(c("-k", "--KNN"), type="integer", default = 6000,
+  make_option(c( "--KNN"), type="integer", default = 6000,
               help="Number of neighbors for the KNN graph"),
-  make_option(c("-r", "--Resolution"), type="numeric", default = 0.1,
+  make_option(c("--Resolution"), type="numeric", default = 0.1,
               help="Resolution for leiden"),
   make_option(c("--proj_tab_SPCA"), type="character",
               help="Path to the projectors table produced by the spatial PCA.", metavar="character"),
-  make_option(c("-outdir"), type="character",
+  make_option(c("--outdir"), type="character",
               help="Folder where the results will be store", metavar="character")
 )
 
