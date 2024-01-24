@@ -37,7 +37,7 @@ sbatch RunSpatialPCA50K.sh
 5. Save the SpatialPCA R object and coordinates in `output_folder`.
 
 - :warning: WARNING :warning:
-    - For a representation containing 100 encoded vectors, a machine with 300 GB of RAM is required, and the R object that is created has a size of 6 GB. 
+    - For a representation containing 100,000 encoded vectors, a machine with 300 GB of RAM is required, and the R object that is created has a size of 6 GB. 
     - The encoded vectors must not be normalised, this step is included in the pipeline.
 
 ## Step 2: Projection 
