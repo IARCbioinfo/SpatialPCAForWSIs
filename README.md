@@ -60,7 +60,23 @@ sbatch Sbacth_ProjectionByPatient.sh
 4. The patient's coded vectors are projected into the latent space of the spatial PCA.
 5. The new tile representation is saved in the folder defined by the `outdir` argument under the following file name `{outdir}/Proj_{sample_id}.csv`.
 
+## Step 3: Search Leiden communities
+
+- To search for morphological clusters we applied the [Leiden community detection](https://www.nature.com/articles/s41598-019-41695-z) methods on the low dimensionnal representations of the the tiles obtained through the spatial PCA.
+- The algorithm is implemented in `LeidenCommunitySpatialPCA.R`, the configuration used in our ESMO open paper are described in `RunLeidenCommunity.sh`.
+
+### Description of the process 
+1. Load all spatial PCA projections concatenated in a single csv file with the following architecture:
+
+|   | img_id_c             | axis_1          | axis_2          | axis_3          | axis_4          | ... | axis_19         | axis_20         | tne_id_c               | x          | y          |
+| - | -------------------- | --------------- | --------------- | --------------- | --------------- | --- | --------------- | --------------- | ---------------------- | ---------- | ---------- |
+| 1 | TNE0001_8065_37633   | -0.2425984449   | -1.5822019878   | 0.2216062175    | -0.7004538129   | ... | 0.0645403598   | 0.1015841795   | TNE0001_8065_37633     | 8065       | 37633      |
+| 2 | TNE0001_22657_31489  | -0.8694107393   | -0.3258183767   | -0.3124274849   | -0.1520251365   | ... | 0.08048248997  | -0.03595781844 | TNE0001_22657_31489    | 22657      | 31489      |
+
+2. Samples randomly n rows (see argline `ntiles`)
+3. Create a graph based on the K-nearest neighbors of each projection (see argline `KNN`)
+4. Seach community of nodes according to the Leiden method (see argline `Resolution`)
+5. Save cluster centroids in a file name `{outputdir}/SPCA_centroids_leiden_ntiles_{ntiles}_KNN_{KNN}_Res_{Resolution}_ncluster_{n_clusters_leiden}.csv`
 ## TO DO LIST
-- :construction: Projections
-- :construction: Leiden community 
+- :construction: Leiden community proj
 - :construction: Random forest

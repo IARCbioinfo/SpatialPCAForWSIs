@@ -106,7 +106,7 @@ clusterlabel_samples_proj = leiden_clustering(latent_dat=df_enc_vector_val, knea
 
 # Add clusters to the tables
 df_enc_vector_to_louvain$cluster <- clusterlabel_samples_proj
-n_clusters_louvain = length(unique(df_enc_vector_to_louvain$cluster))
+n_clusters_leiden = length(unique(df_enc_vector_to_louvain$cluster))
 df_enc_vector_to_louvain <- df_enc_vector_to_louvain[,2:ncol(df_enc_vector_to_louvain)]
 
 print("# ------------------------------------ Compute Louvain Centroids -----------------------------")
@@ -145,14 +145,14 @@ centroids_file_name = paste(exp_folder , paste0(
                                       paste0( 
                                         paste0(
                                           paste0(
-                                            paste0('SPCA_100K_centroids_center_space_leiden_ntiles'
+                                            paste0('SPCA_centroids_leiden_ntiles'
                                                    ,n_tiles_louvain)
                                                     ,"_KNN_"),
                                                     K),
                                                     "_Res_"),
                                                     gsub("\\.", "", as.character(Resolution))), 
                                                     "_ncluster_"),
-                                                     n_clusters_louvain),
+                                                     n_clusters_leiden),
                                                    '.csv'), sep = '/')
 df_centroids
 dim(df_centroids)
