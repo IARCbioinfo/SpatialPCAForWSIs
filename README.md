@@ -78,20 +78,20 @@ sbatch Sbacth_ProjectionByPatient.sh
 4. Seach community of nodes according to the Leiden method (see argline `Resolution`)
 5. Save cluster centroids in a file name `{outputdir}/SPCA_centroids_leiden_ntiles_{ntiles}_KNN_{KNN}_Res_{Resolution}_ncluster_{n_clusters_leiden}.csv`
 
-## Step 4: Assign a community to each spatial PCA projections
-- The script `ClosestCentroids.R` enables to assign a community to each spatial PCA projections according to the minimal distance between a projection and Leiden communities centroids. An example of slurm request is given in `RunClosestCentroids.sh`
- ### Description of the process 
- 1. Load the all spatial PCA projections concatenated in a single csv (see argline `proj_tab_SPCA`). **It must be the same file as the step 3.1**
- 2. Extract the projection of the patient of interest (see argline `sample_id`)
- 3. Load the coordinates of the Leiden communities centroids (see argline `centroids_tab`), this table must have the following format:
- 
+## Step 4: Assigning a community to each spatial PCA projection
+- The `ClosestCentroids.R` script is used to assign a community to each projection from the spatial PCA, based on the minimum distance between a projection and the centroids of the Leiden communities. An example of a slurm query is given in `RunClosestCentroids.sh`.
+ ### Process description 
+ 1. Load all concatenated PCA spatial projections into a single csv (see argline `proj_tab_SPCA`). **This must be the same file as in step 3.1**.
+ 2. Extract the projections of the patient of interest (see argline `sample_id`)
+ 3. Load the coordinates of the centroids of the Leiden communities (see command line `centroids_tab`), this table must have the following format:
+
  |   | cluster | axis_1          | axis_2          | axis_3          | axis_4          | ... | axis_19         | axis_20         |
 | - | ------- | --------------- | --------------- | --------------- | --------------- | --- | --------------- | --------------- |
 | 1 | 1       | 1.0776234132    | 0.3351948348    | -0.561474021    | -1.1364130733   | ... | -0.2101122186  | -0.1931117565  |
 | 2 | 2       | -1.4632848979   | 0.8883086482    | -0.3643381155   | -0.8784518651   | ... | -0.0111574198  | 0.03596174487  |
 
-4. Each projection is assigned to a community according to the minimal distance to one of the Leiden communities centroid.
-5. For the patient of interest the spatial PCA projection vector and its associated cluster is saved in a filename with the following pattern `{outdir}/SPCA_centroids_leiden_ntiles100000_KNN_6000_Res_01_{sample_id}.csv`. This table will have the following format:
+4. Each projection is assigned to a community according to the minimum distance to one of the centroids of the Leiden communities.
+5. For the patient concerned, the vectors resulting from the projection carried out by the spatial PCA and the Leiden community associated with this projection are recorded in a file with the following format `{outdir}/SPCA_centroids_leiden_ntiles100000_KNN_6000_Res_01_{sample_id}.csv`. This table will have the following format:
 
 |   | img_id_c              | axis_1          | axis_2          | axis_3          | axis_4          | ... | axis_19         | axis_20         | sample_id    | x      | y      | cluster |
 | - | --------------------- | --------------- | --------------- | --------------- | --------------- | --- | --------------- | --------------- | ----------- | ------ | ------ | ------- |
