@@ -74,7 +74,7 @@ correct_tiles_id <- function(df_enc_vector_c){
 
 print("# --------------------------------- Read scales encoded vectors ------------------------------------------------------------------------")
 df_enc_vector <- read.csv(path2projectors)
-colnames(df_enc_vector)[colnames(df_enc_vector) == "tne_id_c"] ="sample_id"
+#colnames(df_enc_vector)[colnames(df_enc_vector) == "tne_id_c"] ="sample_id"
 df_enc_vector <- df_enc_vector[!duplicated(df_enc_vector$img_id),]
 df_enc_vector <- df_enc_vector[,2:ncol(df_enc_vector)]
 

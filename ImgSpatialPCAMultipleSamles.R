@@ -23,7 +23,6 @@
 #' @export
 
 SpatialPCA_Multiple_Sample = function(count_list,location_list,gene.type="spatial",sparkversion="spark",numCores_spark=5,gene.number=3000, customGenelist=NULL,min.loctions = 20, min.features=20,bandwidth_common=0.1){
-  print("Emilie SpatialPCA_Multiple_Sample")
   require(Seurat)
   if(length(count_list) != length(location_list)) {
     stop("The number of count matrix should match with the number of location matrix. ")
