@@ -58,7 +58,7 @@ sbatch Sbacth_ProjectionByPatient.sh
 
 3. Extraction of encoded vectors belonging to the patient of interest (see argline `sample_id`)
 4. The patient's encoded vectors are projected into the latent space of the spatial PCA.
-5. The new tiles representations is saved in the folder defined by the `outdir` argument under the following file name `{outdir}/Proj_{sample_id}.csv`.
+5. The new tiles representations are saved in the folder defined by the `outdir` argument under the following file name `{outdir}/Proj_{sample_id}.csv`.
 
 ## Step 3: Search Leiden communities
 
