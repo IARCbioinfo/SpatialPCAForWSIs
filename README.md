@@ -40,6 +40,26 @@ sbatch RunSpatialPCA50K.sh
     - For a representation containing 100 encoded vectors, a machine with 300 GB of RAM is required, and the R object that is created has a size of 6 GB. 
     - The encoded vectors must not be normalised, this step is included in the pipeline.
 
+## Step 2: Projection 
+- To project additional tiles' repsentations onto the low dimensional space created by the spatial PCA, the script `ProjectionElaboratedByPatient.R` can be used. An example of configuration is given in `Sbacth_ProjectionByPatient.sh`
+- Command line on a cluster working with slurm:
+```
+sbatch Sbacth_ProjectionByPatient.sh
+```
+### Description of the process 
+
+1. Load the R SpatialPCA object created in the previous step (see argline parameter `spca_obj`)
+2. Load the **projector tables** which must be **centred and standardised**, and must follow the following structure (see argline `proj_tab_norm`) :
+
+|   | X0           | X1            | X2          | X3            | ... | X124         | X125         | X126         | X127         | img_id                  | sample_id   | img_id_c               | x           | y           |
+| - | ------------ | ------------- | ----------- | ------------- | --- | ------------ | ------------ | ------------ | ------------ | ------------------------ | -------- | ---------------------- | ----------- | ----------- |
+| 1 | 0.5090191117 | -0.9064313876 | -2.726900674 | 0.274636068  | ... | 1.0504566226 | 1.9215368440 | 1.0672475244 | -0.0707460975 | TNE1019_30721_19585     | TNE1019  | TNE1019_30721_19585   | 30721       | 19585       |
+| 2 | 0.1726495568 | -0.1714783594 | -2.496432701 | -0.016819896 | ... | 0.0436065054 | 1.2325113930 | 1.7371222537 | 0.3325003079 | TNE1019_33409_28801     | TNE1019  | TNE1019_33409_28801   | 33409       | 28801       |
+
+3. Extraction of encoded vectors belonging to the patient of interest (see argline `sample_id`)
+4. The patient's coded vectors are projected into the latent space of the spatial PCA.
+5. The new tile representation is saved in the folder defined by the `outdir` argument under the following file name `{outdir}/Proj_{sample_id}.csv`.
+
 ## TO DO LIST
 - :construction: Projections
 - :construction: Leiden community 

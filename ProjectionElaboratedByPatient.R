@@ -15,7 +15,6 @@ library("optparse")
 # To comment
 library(ggplot2)
 library(gridExtra)
-setwd("/home/mathiane/LNENWork/LNEN_Molecular_groups_barlow_twin/script_spatial_pca")
 
 
 source('ImgSpatialPCAMultipleSamles.R')
@@ -35,11 +34,11 @@ option_list = list(
   make_option(c("--spca_obj"), type="character",
               help="Path to the SpatialPCA R object", metavar="character"),
   make_option(c("--dimension_enc_vectors"), type="integer", default=128, 
-        help="Dimension of encoded vectors")
+        help="Dimension of encoded vectors"),
   make_option(c("--proj_tab_norm"), type="character",
               help="Access path to the projectors table. Projectors must be centred and standardised.", metavar="character"),
   make_option(c("--outdir"), type="character",
-              help="Folder where the results will be store", metavar="character"),
+              help="Folder where the results will be store", metavar="character")
   
 )
 
