@@ -87,9 +87,9 @@ setClass("SpatialPCA", slots=list(
 #' 
 #' @export
 CreateSpatialPCAObject <- function(counts, location, covariate=NULL,project = "SpatialPCA", gene.type="spatial", sparkversion="spark",numCores_spark=1, gene.number=3000,customGenelist=NULL,min.loctions = 20,  min.features=20){
-  print('Emilie FUNCTION')
-  #suppressMessages(require(Seurat))
-  #suppressMessages(require(SPARK))
+  ### print('Emilie FUNCTION')
+  ### #suppressMessages(require(Seurat))
+  ### suppressMessages(require(SPARK))
   
   ## check dimension
   if(ncol(counts)!=nrow(location)){
@@ -140,54 +140,19 @@ CreateSpatialPCAObject <- function(counts, location, covariate=NULL,project = "S
   
   if(!is.null(customGenelist)){ # if user specified customGenelist
     
-    cat(paste("## ENILIE Use SCTransform function in Seurat to normalize data. \n"))
+    cat(paste("## Use SCTransform function in Seurat to normalize data. \n"))
     Seu= scale(Seu, center = TRUE, scale = TRUE)
-    # Seu = SCTransform(Seu, return.only.var.genes = FALSE, variable.features.n = NULL,  variable.features.rv.th = 1.3)
+    ### Seu = SCTransform(Seu, return.only.var.genes = FALSE, variable.features.n = NULL,  variable.features.rv.th = 1.3)
     cat(paste("## Custom gene list contains ",length(customGenelist)," genes. \n"))
     customGenelist = as.character(customGenelist)
     ind_match = na.omit(match(customGenelist, rownames(Seu)))
     cat(paste("## In total ",length(ind_match)," custom genes are matched with genes in the count matrix. \n"))
     object@normalized_expr = Seu
     cat(paste("## Use ",length(ind_match)," custom genes for analysis. \n"))
-    #ind_match = na.omit(match(customGenelist, rownames(Seu@assays$SCT@scale.data)))
-    
-    #object@normalized_expr = Seu@assays$SCT@scale.data[ind_match,]
-    # cat(paste("## Use ",length(ind_match)," custom genes for analysis. \n"))
-    
+
   }else{		# if user didn't specify customGenelist
     
-    if(gene.type=="hvg"){
-      
-      cat(paste("## Emilie 2 : Use SCTransform function in Seurat to normalize data. \n"))
-      
-      if(is.null(gene.number)){
-        
-        Seu = SCTransform(Seu, return.only.var.genes = TRUE, variable.features.n = NULL,  variable.features.rv.th = 1.3)
-        object@normalized_expr = Seu@assays$SCT@scale.data
-        gene.number = dim(Seu@assays$SCT@scale.data)[1]
-        cat(paste("## Gene number is not specified, using all ",gene.number," highly variable genes. \n"))  		
-        
-      }else{
-        
-        Seu = SCTransform(Seu, return.only.var.genes = TRUE, variable.features.n = NULL,  variable.features.rv.th = 1.3)
-        hvg_gene_num = dim(Seu@assays$SCT@scale.data)[1]
-        
-        if( gene.number < hvg_gene_num ){
-          
-          object@normalized_expr = Seu@assays$SCT@scale.data[1:gene.number,]
-          
-          cat(paste("## Using top ",gene.number," highly variable genes. \n"))
-          
-        }else{
-          
-          object@normalized_expr = Seu@assays$SCT@scale.data
-          cat("The  number of highly variable genes is less than the specified number of genes. \n")
-          cat(paste("## Using ",hvg_gene_num," highly variable genes for analysis. \n"))
-          
-        }
-        
-      }
-    }else if(gene.type=="spatial"){
+    if(gene.type=="spatial"){
       
       # normalize data
       cat(paste("##Emilie 3:  Use SCTransform function in Seurat to normalize data. \n"))
@@ -202,50 +167,7 @@ CreateSpatialPCAObject <- function(counts, location, covariate=NULL,project = "S
         
         count_test_spark = object@counts[na.omit(match(rownames(Seu), rownames(object@counts))), na.omit(match(colnames(Seu),colnames(object@counts)))]
         location_test_spark = as.data.frame(object@location[match(colnames(object@counts), rownames(object@location)), ])
-        
-        
-        # count_test_spark = object@counts[na.omit(match(rownames(Seu@assays$SCT@scale.data), rownames(object@counts))), na.omit(match(colnames(Seu@assays$SCT@scale.data),colnames(object@counts)))]
-        # location_test_spark = as.data.frame(object@location[match(colnames(Seu@assays$SCT@scale.data), rownames(object@location)), ])
-        # spark_result <- spark(count_test_spark, location_test_spark,numCores = numCores_spark)
-        # 
-        # print("------------------  Spark results")
-        # print(spark_result)
-        # 
-        # significant_gene_number = sum(spark_result@res_mtest$adjusted_pvalue <= 0.05)
-        # SVGnames = rownames(spark_result@res_mtest[order(spark_result@res_mtest$adjusted_pvalue),])[1:significant_gene_number]
-        # cat(paste("## Identified ", length(SVGnames)," spatial genes through spark.test function. \n"))
-        
-        # rawcount=count_test_spark
-        # location=location_test_spark
-        # numCores = numCores_spark
-        # print("-----------------------------My spark function-------------------------------------------")
-        # location = as.data.frame(location)
-        # print('location_test_spark')
-        # 
-        # rownames(location) = colnames(rawcount)
-        # print('rownames')
-        # #
-        # spark <- CreateSPARKObject(counts=rawcount, location=location)
-        # print(spark)
-        # 
-        # # print("CreateSPARKObject")
-        # spark@lib_size <- apply(rawcount, 2, sum)
-        # print("spark@lib_size")
-        # print(spark)
-        # spark <- spark.vc(spark,
-        #                   covariates = NULL,
-        #                   lib_size = spark@lib_size,
-        #                   num_core = numCores,
-        #                   verbose = F,
-        #                   fit.model="gaussian")
-        # spark <- spark.test(spark,
-        #                     check_positive = T,
-        #                     verbose = F)
-        # print("-----------------------------End my spark function -------------------------------------------")
-        # #
-        
-        
-        #significant_gene_number = sum(spark_result@res_mtest$adjusted_pvalue <= 0.05)
+
         SVGnames = rownames(Seu) #rownames(spark_result@res_mtest[order(spark_result@res_mtest$adjusted_pvalue),])[1:significant_gene_number]
         cat(paste("## Identified ", length(SVGnames)," spatial genes through spark.test function. \n"))
       }else if(sparkversion=="sparkx"){
@@ -263,6 +185,7 @@ CreateSpatialPCAObject <- function(counts, location, covariate=NULL,project = "S
       # subset normalized data with spatial genes
       if(is.null(gene.number)){
         
+        object@normalized_expr = Seu@assays$SCT@scale.data[na.omit(match(SVGnames, rownames(Seu@assays$SCT@scale.data))),]
         object@normalized_expr = Seu@assays$SCT@scale.data[na.omit(match(SVGnames, rownames(Seu@assays$SCT@scale.data))),]
         cat(paste("## Gene number is not specified, we use all ",gene.number," spatially variable genes. \n")) 
         
