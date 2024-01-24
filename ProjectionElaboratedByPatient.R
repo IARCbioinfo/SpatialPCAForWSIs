@@ -74,7 +74,7 @@ head(SpatialPCs_ori_t)
 rownames(SpatialPCs_ori_t) <- unlist(lapply(rownames(SpatialPCs_ori_t), function(x)  substr(x, str_locate(x, '_')+1, nchar(x))  ))
 # ecoded vector
 df_enc_vector <- read.csv(path_projectors_norm)
-colnames(df_enc_vector)[colnames(df_enc_vector) == "tne_id_c"] ="sample_id"
+#colnames(df_enc_vector)[colnames(df_enc_vector) == "tne_id_c"] ="sample_id"
 
 df_enc_vector_c_sampleid = df_enc_vector[df_enc_vector$sample_id == sampleID,]
 head(df_enc_vector_c_sampleid)
@@ -105,7 +105,6 @@ rm(EIGEN)
 gc(verbose=T)
 print("SVD computed")
 
-################# Compute M
 
 enc_val_for_pca = df_enc_vector_c_sampleid[,2:(d_enc_vectors+1)]
 enc_val_t_for_pca <- t(enc_val_for_pca)
@@ -165,7 +164,6 @@ colnames(SpatialPCs_proj_t)<-unlist(lapply(1:20, function(x) paste('axis', x, se
 SpatialPCs_proj_t <- data.frame(SpatialPCs_proj_t)
 img_id <- df_enc_vector_c_sampleid$img_id_c
 rownames(SpatialPCs_proj_t) <- img_id
-
 write.csv(SpatialPCs_proj_t, nfilename)
 
 }

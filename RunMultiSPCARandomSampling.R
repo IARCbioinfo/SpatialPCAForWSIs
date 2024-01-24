@@ -58,8 +58,9 @@ option_list = list(
 
 opt_parser = OptionParser(option_list=option_list)
 opt = parse_args(opt_parser)
-n_tiles = opt$n_tiles #10000
+n_tiles = opt$n_tiles 
 output_folder = opt$output_folder
+dir.create(output_folder, showWarnings = FALSE)
 path2projectors = opt$path2projectors
 d_enc_vectors = opt$dimension_enc_vectors
 # -------------------- My function -----------------------

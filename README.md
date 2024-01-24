@@ -33,7 +33,7 @@ sbatch RunSpatialPCA50K.sh
 
 2. Extraction of n random row of in the data frame (n = `n_tiles`)
 3. Creation of list of tables of features and coordinates per samples
-4. Creation of the Spatial PCA
+4. Creation of the Spatial PCA considering the *first 20 principal components*
 5. Save the SpatialPCA R object and coordinates in `output_folder`
 
 - :warning: WARNING :warning:
