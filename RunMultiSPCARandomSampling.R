@@ -67,7 +67,7 @@ d_enc_vectors = opt$dimension_enc_vectors
 correct_tiles_id <- function(df_enc_vector_c){
   # Tiles are expected to have an id such as patientID_coordsX_coordsY.jpg
   # This function garantee that tile ID respect the pattern mentionned above.
-  tiles_id <- unlist(lapply(df_enc_vector_c$img_id, function(x)   paste(str_split(x, pattern ='_')[[1]][1], 
+  tiles_id <- unlist(lapply(df_enc_vector_c$img_id, function(x)   paste(substr(x,1,7),
                                                                         str_split(x, pattern ='_')[[1]][2], 
                                                                         str_split(x, pattern ='_')[[1]][3], sep= '_') ))
   return(tiles_id)
@@ -75,7 +75,7 @@ correct_tiles_id <- function(df_enc_vector_c){
 
 print("# --------------------------------- Read scales encoded vectors ------------------------------------------------------------------------")
 df_enc_vector <- read.csv(path2projectors)
-#colnames(df_enc_vector)[colnames(df_enc_vector) == "tne_id_c"] ="sample_id"
+colnames(df_enc_vector)[colnames(df_enc_vector) == "tne_id"] ="sample_id"
 df_enc_vector <- df_enc_vector[!duplicated(df_enc_vector$img_id),]
 df_enc_vector <- df_enc_vector[,2:ncol(df_enc_vector)]
 
@@ -86,7 +86,15 @@ df_enc_vector$TilesForPCA <- select_tiles_v
 
 df_enc_vectors_to_pca <- df_enc_vector[df_enc_vector$TilesForPCA == 1,]
 df_enc_vectors_to_proj <- df_enc_vector[df_enc_vector$TilesForPCA == 0,]
+
+df_enc_vectors_to_pca$x <- unlist(lapply(df_enc_vectors_to_pca$img_id, function(x)  str_split(x, pattern ='_')[[1]][2]))
+df_enc_vectors_to_pca$y <- unlist(lapply(df_enc_vectors_to_pca$img_id, function(x)  str_split(x, pattern ='_')[[1]][3]))
+df_enc_vectors_to_pca$img_id_c <- correct_tiles_id(df_enc_vectors_to_pca)
+
+
+
 rm(df_enc_vector)
+print(head(df_enc_vectors_to_pca))
 
 print("# -----------------------List of tables  --------------------------------------------")
 # Get all sample name
@@ -130,7 +138,10 @@ for (ele in unique(Samples_from_PCA)){
   
   c = c + 1
 }
-
+print("---------------------------------------  encoded_vectors_df_list_for_pca  ------------------------------------------------------")
+print(head(encoded_vectors_df_list_for_pca[[1]]))
+print("---------------------------------------  coords_df_list_for_pca  ------------------------------------------------------")
+print(head(coords_df_list_for_pca[[1]]))
 print("# -------------------------------------- Compute spatial PCA -------------------------------------")
 
 LIBD_multi = SpatialPCA_Multiple_Sample(encoded_vectors_df_list_for_pca, coords_df_list_for_pca ,gene.type="spatial",sparkversion="spark",

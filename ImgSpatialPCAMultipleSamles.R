@@ -31,6 +31,10 @@ SpatialPCA_Multiple_Sample = function(count_list,location_list,gene.type="spatia
   # create seurat object for each dataset
   seurat_list = list()
   for(count in 1:length(count_list)){
+    print("************************************** HERE 0 ***********************************************************************")
+    print("************************************** Colnames *********************************************************************")
+    print(colnames(count_list[[count]]))
+
     colnames(count_list[[count]]) = paste0("Sample",count,"_",colnames(count_list[[count]]))
     rownames(location_list[[count]]) = colnames(count_list[[count]])
     seurat_list[[count]] <- count_list[[count]] 
@@ -40,6 +44,8 @@ SpatialPCA_Multiple_Sample = function(count_list,location_list,gene.type="spatia
 
   count_df <- data.frame(count_list[1])
   for (i in 2:length(count_list)){
+    print("************************************** HERE 1 ***********************************************************************")
+
     count_df <- cbind(count_df, data.frame(count_list[i]))
   }
   data_m <- data.matrix(count_df)
