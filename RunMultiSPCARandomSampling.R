@@ -99,13 +99,10 @@ print(head(df_enc_vectors_to_pca))
 print("# -----------------------List of tables  --------------------------------------------")
 # Get all sample name
 Samples_from_PCA <- df_enc_vectors_to_pca$sample_id 
-print(unique(Samples_from_PCA))
-print(length(unique(Samples_from_PCA)))
 
 # Remove Samples with less than 3 tiles  from spatial PCA
 for (sampl in unique(Samples_from_PCA)){
   if(nrow(df_enc_vectors_to_pca[df_enc_vectors_to_pca$sample_id  == sampl,]) < 3){
-    print(sampl)
     c_sampl <- df_enc_vectors_to_pca[df_enc_vectors_to_pca$sample_id  == sampl, ]
     df_enc_vectors_to_proj <- rbind(df_enc_vectors_to_proj, c_sampl)
     df_enc_vectors_to_pca <- df_enc_vectors_to_pca[df_enc_vectors_to_pca$sample_id  != sampl, ]
