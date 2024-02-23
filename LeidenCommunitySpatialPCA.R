@@ -57,6 +57,18 @@ K =opt$KNN
 Resolution =opt$Resolution 
 exp_folder = opt$outdir  
 dir.create(exp_folder, showWarnings = FALSE)
+
+print("# ------------------------ Format SPA projection --------")
+
+correct_tiles_id <- function(df_enc_vector_c){
+  tiles_id <- unlist(lapply(df_enc_vector_c$X, function(x)   paste(substr(x,1,7), 
+                                                                        str_split(x, pattern ='_')[[1]][2], 
+                                                                        str_split(x, pattern ='_')[[1]][3], sep= '_') ))
+  return(tiles_id)
+}
+c = 1
+
+
 print("# -------------------- Load data -------------------------")
 leiden_clustering = function( latent_dat,knearest=100, Resolution=0.02){
   set.seed(1234)
@@ -105,9 +117,12 @@ df_enc_vector_to_louvain <- df_enc_vector[tiles_for_louvain, ]
 # Get vectors associated with the spatial PCA
 # Warning here we are supposing that "axis_1" matches with the 3rd column and that "axis_20" matches with the 22nd column.
 df_enc_vector_val <- df_enc_vector_to_louvain[,3:22]
+print("Head df_enc_vector_val :")
+print(head(df_enc_vector_val))
 # Extract tiles info in another table
 df_enc_vector_info <- data.frame("img_id" = df_enc_vector_to_louvain[,2])
-
+print("Head df_enc_vector_info :")
+print(head(df_enc_vector_info))
 
 df_enc_vector_val <- t(df_enc_vector_val)
 colnames(df_enc_vector_val) <- df_enc_vector_info$img_id
@@ -121,7 +136,8 @@ clusterlabel_samples_proj = leiden_clustering(latent_dat=df_enc_vector_val, knea
 df_enc_vector_to_louvain$cluster <- clusterlabel_samples_proj
 n_clusters_leiden = length(unique(df_enc_vector_to_louvain$cluster))
 df_enc_vector_to_louvain <- df_enc_vector_to_louvain[,2:ncol(df_enc_vector_to_louvain)]
-
+print("Head df_enc_vector_to_louvain :")
+print(head(df_enc_vector_to_louvain))
 print("# ------------------------------------ Compute Louvain Centroids -----------------------------")
 centroid_by_axis <- function(axis, n_tot){
   return (sum(axis)/n_tot)

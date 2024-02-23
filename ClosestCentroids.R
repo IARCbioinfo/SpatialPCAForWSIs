@@ -19,10 +19,10 @@ option_list = list(
               help="Patient ID matching WSI filename", metavar="character"),
   make_option(c("--proj_tab_SPCA"), type="character",
               help="Path to the projectors table produced by the spatial PCA.", metavar="character"),
-  make_option(c("--outdir"), type="character",
-              help="Folder where the results will be store", metavar="character")
+  make_option(c("--outdir"), type="character", 
+              help="Folder where the results will be store", metavar="character"),
   make_option(c("--centroids_tab"), type="character",
-              help="Path to the table of centroids of Leiden communities", metavar="character"),
+              help="Path to the table of centroids of Leiden communities", metavar="character")
 )
 
 opt_parser = OptionParser(option_list=option_list)

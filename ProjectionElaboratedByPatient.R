@@ -15,6 +15,7 @@ library("optparse")
 # To comment
 library(ggplot2)
 library(gridExtra)
+setwd("/home/mathiane/LNENWork/SpatialPCAForWSIs")
 
 
 source('ImgSpatialPCAMultipleSamles.R')
@@ -55,7 +56,7 @@ dir.create(outdir, showWarnings = FALSE)
 exp_folder = outdir
 # Output filename
 nfilename = paste(exp_folder, paste('Proj', paste( sampleID , '.csv', sep = '') , sep = '_'), sep = '/')
-if ( file.exists(nfilename) == FALSE){
+if ( (file.exists(nfilename) == FALSE) & (sampleID != "TNE233")){
 
 
 print("# -------------------- Load data -------------------------")
@@ -74,10 +75,14 @@ head(SpatialPCs_ori_t)
 rownames(SpatialPCs_ori_t) <- unlist(lapply(rownames(SpatialPCs_ori_t), function(x)  substr(x, str_locate(x, '_')+1, nchar(x))  ))
 # ecoded vector
 df_enc_vector <- read.csv(path_projectors_norm)
-#colnames(df_enc_vector)[colnames(df_enc_vector) == "tne_id_c"] ="sample_id"
 
-df_enc_vector_c_sampleid = df_enc_vector[df_enc_vector$sample_id == sampleID,]
+df_enc_vector$x <- as.integer(df_enc_vector$x)
+df_enc_vector$y <- as.integer(df_enc_vector$y)
+
+
+df_enc_vector_c_sampleid = df_enc_vector[df_enc_vector$tne_id == sampleID,]
 head(df_enc_vector_c_sampleid)
+
 
 df_enc_vector_c_sampleid = df_enc_vector_c_sampleid[!duplicated(df_enc_vector_c_sampleid$img_id_c ),]
 
